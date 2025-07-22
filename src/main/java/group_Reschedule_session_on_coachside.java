@@ -1,3 +1,4 @@
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import org.openqa.selenium.By;
@@ -12,7 +13,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 
-public class Reschedule_session {
+public class group_Reschedule_session_on_coachside {
 
     public static void main(String[] args) throws Exception {
         UiAutomator2Options options = new UiAutomator2Options();
@@ -40,13 +41,13 @@ public class Reschedule_session {
         Expert_Registration.click();
 
         // Enter email
-        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[5]")));
+        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[2]")));
         emailField.click();
-        emailField.sendKeys("priyanka.nikhade11@gmail.com");
+        emailField.sendKeys("priyankanikhade@aladinntech.in");
         Thread.sleep(3000);
 
         // Enter password
-        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[6]")));
+        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[3]")));
         passwordField.click();
         passwordField.sendKeys("Pass@123");
         Thread.sleep(3000);
@@ -83,30 +84,62 @@ public class Reschedule_session {
 
         Thread.sleep(3000);
 
-        // Scroll (if needed) and click "Reschedule"
-        try {
-            // Scroll down (optional - in case Reschedule button is off-screen)
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            HashMap<String, Object> scrollObject = new HashMap<>();
-            scrollObject.put("direction", "down");
-            js.executeScript("mobile: scroll", scrollObject);
+//        // Scroll (if needed) and click "Reschedule"
+//        try {
+//            // Scroll down (optional - in case Reschedule button is off-screen)
+//            JavascriptExecutor js = (JavascriptExecutor) driver;
+//            HashMap<String, Object> scrollObject = new HashMap<>();
+//            scrollObject.put("direction", "down");
+//            js.executeScript("mobile: scroll", scrollObject);
+//
+//            // Now try clicking the button
+//            WebElement rescheduleBtn = wait.until(ExpectedConditions.elementToBeClickable(
+//                    By.xpath("//*[contains(@content-desc, 'Reschedule')]")
+//            ));
+//            rescheduleBtn.click();
+//            System.out.println("Reschedule button clicked.");
+//        } catch (TimeoutException e) {
+//            System.out.println("Reschedule button not found or not clickable.");
+//        }
 
-            // Now try clicking the button
-            WebElement rescheduleBtn = wait.until(ExpectedConditions.elementToBeClickable(
-                    By.xpath("//*[contains(@content-desc, 'Reschedule')]")
-            ));
-            rescheduleBtn.click();
-            System.out.println("Reschedule button clicked.");
-        } catch (TimeoutException e) {
-            System.out.println("Reschedule button not found or not clickable.");
-        }
+
+        driver.findElement(AppiumBy.androidUIAutomator(
+                "new UiScrollable(new UiSelector().scrollable(true))" +
+                        ".scrollIntoView(new UiSelector().descriptionContains(\"Reschedule\"))"
+        )).click();
+
+
 
         Thread.sleep(3000);
 
             // Tap on the Reschedule button
             WebElement Reschedule_button = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//android.view.View[@content-desc=\"Reschedule\"]")));
             Reschedule_button.click();
-            System.out.println("Reschedule Button ");
+            System.out.println("Reschedule Button");
+
+
+            //Tap on the Date & time
+        WebElement dateTime = driver.findElement(By.xpath("//android.view.View[@content-desc='16 / 07 / 2025 09:00']/.."));
+        dateTime.click();
+
+        //Select the Date and Time
+        WebElement Choose_Date = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//android.view.View[@content-desc=\"Thursday, July 17, 2025\"]")));
+        Choose_Date.click();
+
+        //Tap on the Next button
+        WebElement Next = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//android.view.View[@content-desc=\"Next\"]")));
+        Next.click();
+
+        //Tap on the Slot
+        WebElement Slot = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//android.view.View[@content-desc=\"09:00\"]")));
+        Slot.click();
+
+        //Tap on the Save button
+        WebElement save = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//android.view.View[@content-desc=\"Save\"]")));
+        save.click();
+
+
+
 
 
         }

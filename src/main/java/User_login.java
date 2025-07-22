@@ -25,7 +25,6 @@ public class User_login {
         options.setUiautomator2ServerLaunchTimeout(Duration.ofSeconds(60));
 
         //  Ensure Appium server is running on port 4723
-                // ✅ Assign to class-level driver, NOT local variable
                 driver = new AndroidDriver(new URL("http://127.0.0.1:4723/"), options);
 
                 driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -40,13 +39,13 @@ public class User_login {
 
 
         // Enter Email
-        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[5]")));
+        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[2]")));
         emailField.click();
-        emailField.sendKeys("priyankanikhade@aladinntech.in");
+        emailField.sendKeys("priyanka.nikhade11@gmail.com");
 
         Thread.sleep(3000);
         // Enter Password
-        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[6]")));
+        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[3]")));
         passwordField.click();
         passwordField.sendKeys("Pass@123");
 

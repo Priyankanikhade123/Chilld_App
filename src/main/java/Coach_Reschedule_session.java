@@ -9,7 +9,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 public class Coach_Reschedule_session {
 
@@ -37,13 +41,13 @@ public class Coach_Reschedule_session {
         Thread.sleep(3000);
 
         // Enter Email
-        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[5]")));
+        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[2]")));
         emailField.click();
-        emailField.sendKeys("priyankanikhade@aladinntech.in");
+        emailField.sendKeys("priyanka.nikhade11@gmail.com");
         Thread.sleep(3000);
 
         // Enter Password
-        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[6]")));
+        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.ScrollView/android.widget.ImageView[3]")));
         passwordField.click();
         passwordField.sendKeys("Pass@123");
         Thread.sleep(3000);
@@ -64,8 +68,17 @@ public class Coach_Reschedule_session {
         System.out.println("Click on the New Requests button");
         Thread.sleep(5000);
 
-
-
+        //Tap on the first session
+        WebElement First_session = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("(//android.view.View[@content-desc=\"ONE-ON-ONE\n" +
+                "New Request\n" +
+                "Priyanka\n" +
+                "Reschedule\n" +
+                "60 Min\n" +
+                " - $535\n" +
+                " - zoom\n" +
+                "July 18, 2025, 9:00 AM\n" +
+                "It Is One To One Session\"])[2]")));
+        First_session.click();
 
 
 //
@@ -80,23 +93,17 @@ public class Coach_Reschedule_session {
 //        // Click the first one
 //        sessions.get(0).click();
 
-        // Wait for session cards to be present - click the first one
+        // Wait for session cards that contain 'GROUP SESSION' in content-desc
         List<WebElement> sessionCards = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
-                By.xpath("//android.view.View[contains(@content-desc, 'Today One To One Session')]")
+                By.xpath("//android.view.View[contains(@content-desc, 'GROUP SESSION')]")
         ));
 
         if (!sessionCards.isEmpty()) {
             sessionCards.get(0).click();
-            System.out.println("Clicked on the first session card successfully.");
+            System.out.println("Clicked on the first GROUP SESSION card successfully.");
         } else {
-            System.out.println("No session cards found.");
+            System.out.println("No GROUP SESSION cards found.");
         }
-
-
-
-
-
-
 
 
         //Tap on the Reschedule button
@@ -107,65 +114,95 @@ public class Coach_Reschedule_session {
 
 
 
-        // Step 1: Select next date
-        List<WebElement> dates = driver.findElements(By.xpath("//android.view.View[contains(@content-desc, 'June')]"));
-        if (dates.size() > 1) {
-            dates.get(1).click(); // skip today's date, pick the next
-            System.out.println("Next date selected: " + dates.get(1).getAttribute("content-desc"));
-        } else {
-            System.out.println("No next date found.");
 
-        }
+        //Tap on the Date & Time button
+        WebElement dateTimeBox = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//android.view.View[contains(@content-desc, '/ 2025')]")
+        ));
+        dateTimeBox.click();
+        System.out.println("Clicked on dynamic Date & Time textbox");
 
-// Step 2: Tap "Next"
-        WebElement nextBtn = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//android.view.View[@content-desc='Next']")));
+
+        // Get tomorrow's date
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+
+// Format as per your app (e.g., "30", "31", etc.)
+        String day = String.valueOf(tomorrow.getDayOfMonth());
+
+// XPath to find the date by text (only the number in calendar grid)
+        String xpath = "//android.view.View[@content-desc='" + day + "']";
+
+// Click on the date
+        WebElement dateElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
+        dateElement.click();
+        System.out.println("Clicked on date: " + day);
+
+// Click on the "Next" button
+        WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//android.widget.Button[@text='Next']")));
+        nextButton.click();
+        System.out.println("Clicked on Next button");
+
+
+
+        //Replacement of code of Date and time
+
+        // Step 1: Calculate the date to be selected (e.g., today + 1 day)
+        LocalDate desiredDate = LocalDate.now().plusDays(1); // for tomorrow
+        DateTimeFormatter accessibilityFormatter = DateTimeFormatter.ofPattern("Monday, june 30, 2025", Locale.ENGLISH); // Monday, June 30, 2025
+        String formattedDate = desiredDate.format(accessibilityFormatter);
+
+        System.out.println("Selecting date: " + formattedDate);
+
+// Step 2: Find and click the desired date element using accessibility ID
+        WebElement dateElement1 = wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.accessibilityId(formattedDate)));
+        dateElement.click();
+        System.out.println("Date selected.");
+
+// Step 3: Click on "Next"
+        WebElement nextBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//android.widget.Button[@text='Next']")));
         nextBtn.click();
-        Thread.sleep(3000);
+        System.out.println("Next clicked");
 
-// Step 3: Choose first available time slot
-        List<WebElement> slots = driver.findElements(By.xpath("//android.view.View[contains(@content-desc, ':')]"));
+// Step 4: Wait for slot list and select first one
+        List<WebElement> slots = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
+                By.xpath("//android.view.View[contains(@content-desc, ':00')]")
+        ));
+
         if (!slots.isEmpty()) {
-            slots.get(0).click();
-            System.out.println("Time slot selected: " + slots.get(0).getAttribute("content-desc"));
+            slots.get(0).click(); // You can choose based on your logic
+            System.out.println("Slot selected: " + slots.get(0).getAttribute("content-desc"));
         } else {
-            System.out.println("No time slots found.");
-            Thread.sleep(3000);
+            throw new Exception("No available time slots found!");
         }
 
-// Step 4: Tap "Save"
-        WebElement saveBtn = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//android.view.View[@content-desc='Save']")));
+// Step 5: Click Save
+        WebElement saveBtn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//android.widget.Button[@text='Save']")));
         saveBtn.click();
-        System.out.println("Date and time saved.");
-        Thread.sleep(3000);
+        System.out.println("Save clicked");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//
+//// Step 2: Tap "Next"
+//        WebElement nextBtn = wait.until(ExpectedConditions.elementToBeClickable(
+//                By.xpath("//android.view.View[@content-desc='Next']")));
+//        nextBtn.click();
+//        Thread.sleep(3000);
+//
+//// Step 3: Choose first available time slot
+//        List<WebElement> slots = driver.findElements(By.xpath("//android.view.View[contains(@content-desc, ':')]"));
+//        if (!slots.isEmpty()) {
+//            slots.get(0).click();
+//            System.out.println("Time slot selected: " + slots.get(0).getAttribute("content-desc"));
+//        } else {
+//            System.out.println("No time slots found.");
+//            Thread.sleep(3000);
+//        }
+//
+//// Step 4: Tap "Save"
+//        WebElement saveBtn = wait.until(ExpectedConditions.elementToBeClickable(
+//                By.xpath("//android.view.View[@content-desc='Save']")));
+//        saveBtn.click();
+//        System.out.println("Date and time saved.");
+//        Thread.sleep(3000);
 
 
 //        //Tap on the Date & Time box
@@ -190,14 +227,12 @@ public class Coach_Reschedule_session {
 //        Slot_time.click();
 //        Thread.sleep(3000);
 
-        //Tap on the Save Button
-        WebElement Save_Button = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//android.view.View[@content-desc=\"Save\"]")));
-        Save_Button.click();
-        Thread.sleep(3000);
-
-
-
+//        //Tap on the Save Button
+//        WebElement Save_Button = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//android.view.View[@content-desc=\"Save\"]")));
+//        Save_Button.click();
+//        Thread.sleep(3000);
 
 
     }
 }
+
